@@ -1,4 +1,4 @@
-#!/usr/bin/env python3.6
+#!/usr/bin/env python3
 
 import telebot  # Should be installed via pip
 import time
@@ -23,8 +23,14 @@ roll_d100 - эмулирует бросок стогранника
 reminder_on - включить уведомление о мероприятии
 vk_notifier_on - group - включить уведомление о новых постах в группе"""
 
-
-bot = telebot.TeleBot("246360017:AAFvIsc17V3Ztt77pCMpGz2Q0qawLHqVzs0")
+if os.path.exists("RPbot_token"):
+    with open("RPbot_token") as token:
+        TOKEN = token.read()
+else:
+    print("Token not found! (Dayana)")
+    while True:
+        time.sleep(100)
+bot = telebot.TeleBot()
 greets = ("Здравствуй путник, добро пожаловать к костру!",
           "Добрый день. Общаясь со мной, помните - Искусственный интеллект не имеет шансов в столкновении с естественной глупостью.",
           "Добро пожаловать. Скоро здесь останутся лишь две группы работников: те, кто контролирует компьютеры, и те, кого контролируют компьютеры. Постарайтесь попасть в первую.",
