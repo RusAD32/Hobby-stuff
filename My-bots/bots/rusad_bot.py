@@ -18,7 +18,8 @@ import pickle
 
 if os.path.exists("rusad_bot_token"):
     with open("rusad_bot_token") as token:
-        TOKEN = token.read()
+        TOKEN = token.read().strip()
+    print(TOKEN)
 else:
     print("Token not found! (RusAD) ")
     while(True):

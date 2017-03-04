@@ -7,8 +7,8 @@ from time import sleep
 from os import remove
 from sys import argv
 
-with open(argv[1] + "_token") as token:
-    TOKEN = token.read()
+with open(argv[1][:-3] + "_token") as token:
+    TOKEN = token.read().strip()
 dummy = telebot.TeleBot(TOKEN)
 
 @dummy.message_handler(content_types=["text"])

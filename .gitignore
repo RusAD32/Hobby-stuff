@@ -1,0 +1,7 @@
+/My-bots/**
+!/My-bots/watchdog.py
+!/My-bots/.gitignore
+/My-bots/bots/**
+!/My-bots/bots/*.py
+/My-bots/ideas/*
+/My-bots/quotes/*

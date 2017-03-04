@@ -11,7 +11,7 @@ import pickle
 
 if os.path.exists("C_RPbot_token"):
     with open("C_RPbot_token") as token:
-        TOKEN = token.read()
+        TOKEN = token.read().strip()
 else:
     print("Token not found!")
     while True:
