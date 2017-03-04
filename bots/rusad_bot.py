@@ -693,9 +693,6 @@ def update_by_cmnd(message):
         sys.stdout.write(str(message.from_user.id))
         rusad.send_message(message.chat.id, str(message.from_user.username))
         sys.exit()
-    else:
-        replies = get_replier(message)
-        rusad.send_message(message.chat.id, replies.wrong_command)
 
 @rusad.message_handler(commands=['anime_on'])
 def anime_on(message):
@@ -715,21 +712,6 @@ def anime_on(message):
     else:
         rusad.send_message(message.chat.id, config.anime_already_off)
 
-@rusad.message_handler(content_types=["document"])
-def update(message):
-    fname = message.document.file_name
-    if (message.from_user.id in config.developers and message.from_user.id == message.chat.id
-            and fname in ('rusad_bot.py', 'config.py', 'supermind.py')):
-        upd = requests.get('https://api.telegram.org/file/bot{0}/{1}'.format(config.token, rusad.get_file(message.document.file_id).file_path))
-        if fname == 'config.py' or fname == 'supermind.py':
-            dest = open("./"  + fname, mode = 'w')
-        else:
-            dest = open("./" + str(message.from_user.id) + '/' + fname, mode = 'w')
-        dest.write(upd.content.decode("UTF-8"))
-        dest.close()
-        upd.close()
-        sys.stdout.write(str(message.from_user.id))
-        exit()
     
 @rusad.message_handler(content_types=["text"])
 def answerer(message):
