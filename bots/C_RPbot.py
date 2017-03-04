@@ -9,7 +9,14 @@ from requests import exceptions
 import pickle
 
 
-bot = telebot.TeleBot("266334003:AAFy6-I252iuqSCeeJgAP4PaqM9woROqXSI")
+if os.path.exists("C_RPbot_token"):
+    with open("C_RPbot_token") as token:
+        TOKEN = token.read()
+else:
+    print("Token not found!")
+    while True:
+        time.sleep(100)
+bot = telebot.TeleBot(TOKEN)
 pollers = {}
 autoclose = []
 
