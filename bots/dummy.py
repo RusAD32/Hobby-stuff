@@ -1,12 +1,15 @@
-#!/usr/bin/env python3.6
+#!/usr/bin/env python3
 
 import telebot
 import config
 from requests import exceptions
 from time import sleep
 from os import remove
+from sys import argv
 
-dummy = telebot.TeleBot(config.token)
+with open(argv[1] + "_token") as token:
+    TOKEN = token.read()
+dummy = telebot.TeleBot(TOKEN)
 
 @dummy.message_handler(content_types=["text"])
 def answerer(message):
@@ -16,10 +19,5 @@ def answerer(message):
     exit(0)
 
 if __name__ == '__main__':
-    try:
-        dummy.polling(none_stop = False)
-    except exceptions.ConnectionError or exceptions.ReadTimeout:
-        f = open("./errlog", mode = 'w')
-        f.write("disconnected")
-        f.close()
-        sleep(10)
+    dummy.polling(none_stop = False)
+    
