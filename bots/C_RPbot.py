@@ -131,8 +131,8 @@ def new_poll(m):
         bot.reply_to(m, "Извините, в данном чате уже запущен опрос")
     else:
         poll = Poller(m.from_user.id, m.chat.id)
-        pollers[m.from_user.id] = poll
         pollers[m.chat.id] = Poller(0, 0)
+        pollers[m.from_user.id] = poll
         with open("Cbot_state", mode='wb') as state:
             pickle.dump(pollers, state, protocol=pickle.HIGHEST_PROTOCOL)
         bot.send_message(m.from_user.id, "Пришлите, пожалуйста, вопрос")
