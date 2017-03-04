@@ -1,4 +1,4 @@
-#!/usr/bin/env python3.5
+#!/usr/bin/env python3
 
 import config
 import supermind
@@ -12,9 +12,42 @@ import sys
 import requests
 import os
 import socket
-
+import schedule
+import pickle
+ 
 rusad = telebot.TeleBot(config.token)
-games = {}
+if os.path.exists("./rusad_state"):
+    with open("./rusad_state", mode = "rb") as state:
+        games, usrs, wgs, active_wgs, ideaers, animeers = pickle.load(state)
+else:
+    games = {}
+    db = open("./db", mode='r')     #TODO: переделать в нормальную базу данных
+    strs = db.read().split('\n')
+    db.close()
+    usrs = {}
+    wgs = {}
+    active_wgs = {}
+    ideaers = {}
+    animeers = []
+    if os.path.exists("./wgs"):
+        wgs = ideacloud.load("./wgs")
+    for x in strs:
+      if (x.strip() != ''):
+          y = x.split(' ')
+          usrs[y[0]] = int(y[1])
+          if len(y) == 3 and y[2] == 'nya':
+              animeers.append(int(y[1]))
+          elif len(y) >= 3:
+              active_wgs[int(y[1])] = wgs[y[2]]
+              if len(y) == 4:
+                  animeers.append(int(y[1]))
+    if os.path.exists("./sm"):
+        games = supermind.load()
+
+    if not os.path.exists("./ideas"): # Он же на моем личном компе, так что папка там определенно есть. Почему я еще не удалил эти строки?
+        os.mkdir("./ideas")
+    with open("rusad_state", mode='wb') as state:
+        pickle.dump([games, usrs, wgs, active_wgs, ideaers, animeers], state, protocol = pickle.HIGHEST_PROTOCOL)
 mood_replies_ru = {"normal":config.replies_ru_norm,
                    "good":config.replies_ru_good,
                    "bad":config.replies_ru_bad,
@@ -22,28 +55,7 @@ mood_replies_ru = {"normal":config.replies_ru_norm,
                    "dere":config.replies_ru_dere,
                    "genki":config.replies_ru_genki,
                    "deredere":config.replies_ru_deredere}
-
-db = open("./db", mode='r')     #TODO: переделать в нормальную базу данных
-strs = db.read().split('\n')
-usrs = {}
-wgs = {}
-active_wgs = {}
-ideaers = {}
-animeers = []
-
-if os.path.exists("./wgs"):
-    wgs = ideacloud.load("./wgs")
-
-for x in strs:
-    if (x.strip() != ''):
-        y = x.split(' ')
-        usrs[y[0]] = int(y[1])
-        if len(y) == 3 and y[2] == 'nya':
-            animeers.append(int(y[1]))
-        elif len(y) >= 3:
-            active_wgs[int(y[1])] = wgs[y[2]]
-            if len(y) == 4:
-                animeers.append(int(y[1]))
+                   
 
 if os.path.exists("./rusad_bot_errlog"):
     with open("./rusad_bot_errlog") as errs:
@@ -57,12 +69,7 @@ if os.path.exists("./rusad_bot_errlog"):
     os.remove("./rusad_bot_errlog")
 else:
     rusad.send_message(usrs['polocky'], "Я перезагрузился. Скорее всего, меня обновили")
-
-if os.path.exists("./sm"):
-    games = supermind.load()
-
-if not os.path.exists("./ideas"): # Он же на моем личном компе, так что папка там определенно есть. Почему я еще не удалил эти строки?
-    os.mkdir("./ideas")
+                   
 
 class mooder:
     mood = "normal"
@@ -106,15 +113,9 @@ def alerter(usr, waittime, msg):
     client.send(rem.SerializeToString())
     client.close()
 
-def save_usrs():
-    with open("./db", mode = 'w') as db:
-        for usr in usrs.keys():
-            db.write(usr + ' ' + str(usrs[usr]))
-            if usrs[usr] in active_wgs.keys():
-                db.write(' ' + active_wgs[usrs[usr]].name)
-            if usrs[usr] in animeers:
-                db.write(' nya')
-            db.write('\n')
+def save():
+    with open("rusad_state", mode='wb') as state:
+        pickle.dump([games, usrs, wgs, active_wgs, ideaers, animeers], state, protocol = pickle.HIGHEST_PROTOCOL)
 
 def get_replies(message):
     cur_mood = mdr_anim.mood if message.from_user.id in animeers else mdr.mood
@@ -308,7 +309,7 @@ def bot_supermind(message, replies):
     elif code == 1 and "стоп" == message.text.lower():
         msg = replies.sm_stop_msg
         games.pop(message.from_user.id)
-        supermind.save(games)
+        save()
     elif code == 1:
         msg = ''
     elif code == 2:
@@ -317,7 +318,7 @@ def bot_supermind(message, replies):
         msg = replies.sm_repeated_digit
     else:
         msg = games[message.from_user.id](message.text)
-    supermind.save(games)
+    save()
     return msg
 
 def bot_roll_dice(arr, replies):
@@ -503,7 +504,7 @@ def new_game(message):
         rusad.send_message(message.chat.id, message.from_user.first_name + ', я уже играю с тобой!')
     else:  
         games[message.from_user.id] = supermind.game()
-        supermind.save(games)
+        save()
         rusad.send_message(message.chat.id, replies.sm_beginning + message.from_user.first_name + replies.sm_input)
 
 @rusad.message_handler(commands=['add_workgroup'])
@@ -518,8 +519,7 @@ def add_wg(message):
         wg.add_leader(message.from_user.id)
         wgs[wg.name] = wg
         active_wgs[message.from_user.id] = wg
-        ideacloud.save(wgs.values(), "./wgs")
-        save_usrs()
+        save()
 
 @rusad.message_handler(commands=['chmood'])
 def chmood(message):
@@ -538,7 +538,7 @@ def add_usr_to_group(message):
                 arr[1] = arr[1][1:]
             if arr[1] in usrs.keys():
                 active_wgs[asker].add_user(usrs[arr[1]])
-                ideacloud.save(wgs.values(), "./wgs")
+                save()
                 rusad.send_message(message.chat.id, replies.wg_added)
             else:
                 rusad.send_message(message.chat.id, replies.wg_nevermet)
@@ -558,7 +558,7 @@ def add_adm_to_group(message):
                 arr[1] = arr[1][1:]
             if arr[1] in usrs.keys():
                 active_wgs[asker].add_leader(usrs[arr[1]])
-                ideacloud.save(wgs.values(), "./wgs")
+                save()
                 rusad.send_message(message.chat.id, "Добавил")
             else:
                 rusad.send_message(message.chat.id, replies.wg_nevermet)
@@ -574,7 +574,7 @@ def set_active(message):
     elif arr[1] in wgs.keys():
         if message.from_user.id in wgs[arr[1]].users:
             active_wgs[message.from_user.id] = wgs[arr[1]]
-            save_usrs()
+            save()
             rusad.send_message(message.chat.id, replies.wg_changed + arr[1])
         else:
             rusad.send_message(message.chat.id, replies.wg_notamember)
@@ -597,8 +597,7 @@ def delete_user(message):
                 active_wgs[asker].remove_user(uid)
                 if uid in active_wgs.keys() and active_wgs[uid] == active_wgs[asker]:
                     active_wgs.pop(uid)
-                    save_usrs()
-                ideacloud.save(wgs.values(), "./wgs")
+                save()
                 rusad.send_message(message.chat.id, replies.wg_deletesucc)
             else:
                 rusad.send_message(message.chat.id, replies.wg_notingroup)
@@ -619,7 +618,7 @@ def delete_adm(message):
             uid = usrs[arr[1]]
             if uid in active_wgs[asker].leaders:
                 active_wgs[asker].remove_leader(uid)
-                ideacloud.save(wgs.values(), "./wgs")
+                save()
                 rusad.send_message(message.chat.id, replies.wg_admdelsucc)
             else:
                 rusad.send_message(message.chat.id, replies.wg_notinadmins)
@@ -694,7 +693,7 @@ def update_by_cmnd(message):
 def anime_on(message):
     if not message.from_user.id in animeers:
         animeers.append(message.from_user.id)
-        save_usrs()
+        save()
         rusad.send_message(message.chat.id, config.anime_on)
     else:
         rusad.send_message(message.chat.id, config.anime_already_on)
@@ -703,7 +702,7 @@ def anime_on(message):
 def anime_on(message):
     if message.from_user.id in animeers:
         animeers.remove(message.from_user.id)
-        save_usrs()
+        save()
         rusad.send_message(message.chat.id, config.anime_off)
     else:
         rusad.send_message(message.chat.id, config.anime_already_off)
@@ -728,10 +727,9 @@ def update(message):
 def answerer(message):
     special_msg = False
     if (message.from_user.username != None and not message.from_user.username.lower() in usrs.keys()):
-        f = open("./db", mode='a')
-        f.write(message.from_user.username.lower() + " " + str(message.from_user.id) + '\n')
-        f.close()
         usrs.update({message.from_user.username.lower():message.from_user.id})
+        with open("rusad_state", mode='wb') as state:
+            pickle.dump([games, usrs, wgs, active_wgs, ideaers, animeers], state, protocol = pickle.HIGHEST_PROTOCOL)
     if message.from_user.id == usrs['catoflight'] and random.randint(1,4800) == 4800:
         special_msg = True
         rusad.send_message(message.chat.id, "Сишечка, я тебя больше не люблю") # заказной костыль
@@ -746,7 +744,7 @@ def answerer(message):
             special_msg = False
         if "Правильно" in responce or "К сожалению" in responce:
             games.pop(message.from_user.id)
-            supermind.save(games)
+            save()
     if not special_msg and (message.text[0:4].lower() == 'ярик' or message.text[0:5].lower() == 'rusad' or
       message.from_user.id == message.chat.id or message.from_user.id in ideaers.keys()):
         rusad.send_message(message.chat.id, parse_msg(message))
