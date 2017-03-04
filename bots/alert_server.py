@@ -1,4 +1,4 @@
-#!/usr/bin/env python3.5
+#!/usr/bin/env python
 
 from reminder_pb2 import reminder
 import threading
