@@ -14,8 +14,16 @@ import os
 import socket
 import schedule
 import pickle
- 
-rusad = telebot.TeleBot(config.token)
+
+
+if os.path.exists("rusad_bot_token"):
+    with open("rusad_bot_token") as token:
+        TOKEN = token.read()
+else:
+    print("Token not found! (RusAD) ")
+    while(True):
+        time.sleep(100)
+rusad = telebot.TeleBot(TOKEN)
 if os.path.exists("./rusad_state"):
     with open("./rusad_state", mode = "rb") as state:
         games, usrs, wgs, active_wgs, ideaers, animeers = pickle.load(state)
