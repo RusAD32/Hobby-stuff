@@ -330,7 +330,7 @@ def bot_supermind(message, replies):
     save()
     return msg
 
-def bot_roll_dice(arr, replies):
+def bot_roll_dice(arr, replies, chid):
     n, m = 1, 6
     try:
         if arr[0].isdigit():
@@ -350,6 +350,9 @@ def bot_roll_dice(arr, replies):
     msg = ''
     for i in range (0, n):
         msg += str(random.randint(1, m)) + ' '
+        if len(msg) > 2900:
+            rusad.send_message(chid, msg)
+            msg = ""
     return msg
 
 def parse_msg(message):
@@ -479,7 +482,7 @@ def parse_msg(message):
             msg = bot_adm_send_source(message, replies)
             break
         elif "кинь" in arr[i] or "ролл" in arr[i] or "roll" in arr[i]:
-            msg = bot_roll_dice(arr[i+1:], replies)
+            msg = bot_roll_dice(arr[i+1:], replies, message.chat.id)
             break
         else:
             msg = replies.wrong_command
@@ -686,7 +689,7 @@ def show_guesses(message):
 
 @rusad.message_handler(commands=['roll'])
 def roll_dice(message):
-    rusad.send_message(message.chat.id, bot_roll_dice(message.text.lower().split(' ')[1:], mood_replies_ru[mdr.mood]))
+    rusad.send_message(message.chat.id, bot_roll_dice(message.text.lower().split(' ')[1:], mood_replies_ru[mdr.mood]), message.chat.id)
 
 @rusad.message_handler(commands=['upd'])
 def update_by_cmnd(message):
