@@ -472,7 +472,7 @@ def parse_msg(message):
             break
         elif "супермайнд" in arr[i] or "supermind" in arr[i]:
             if message.from_user.id in games.keys():
-                msg = message.from_user.first_name + sm_already_playing
+                msg = message.from_user.first_name + replies.sm_already_playing
             else:  
                 games[message.from_user.id] = supermind.game()
                 supermind.save(games)
@@ -513,7 +513,7 @@ def send_mood(message):
 def new_game(message):
     replies = get_replies(message)
     if message.from_user.id in games.keys():
-        rusad.send_message(message.chat.id, message.from_user.first_name + ', я уже играю с тобой!')
+        rusad.send_message(message.chat.id, message.from_user.first_name + replies.sm_already_playing)
     else:  
         games[message.from_user.id] = supermind.game()
         save()
