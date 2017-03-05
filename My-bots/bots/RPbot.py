@@ -148,9 +148,9 @@ def is_adm(m):
 if os.path.exists("remind_chats"):
     with open("remind_chats", mode='rb') as rem:
         chats_to_remind = pickle.load(rem)
-schedule.every().saturday.at("18:00").do(reminder,
+schedule.every().saturday.at("15:00").do(reminder,
                                          "Хочу напомнить Вам, что игра состоится в это воскресение! Большая просьба не опаздывать или предупреждать об этом заранее. Время начала мероприятия 18-00 по Москве. Место - Антикафе WoodenDoor. Милютинский переулок 6 строение 1.")
-schedule.every().sunday.at("14:00").do(reminder,
+schedule.every().sunday.at("11:00").do(reminder,
                                        "Всем доброго дня. Напоминаю, что игра состоится сегодня, в 6 вечера. Подробности уточняйте у мастера, в сообщениях группы: https://vk.com/explosive_games")
 if os.path.exists("latest"):
     with open("latest", mode='rb') as latest:
@@ -161,7 +161,7 @@ schedule.every().minute.do(vk_notifier)
 if os.path.exists("state"):
     with open("state", mode='rb') as state:
         pollers = pickle.load(state)
-schedule.every(6).hours.do(exit)
+#schedule.every(6).hours.do(exit)
 vk_notifier()
 
 
