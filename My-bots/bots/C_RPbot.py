@@ -106,11 +106,11 @@ if os.path.exists("autoclose"):
     with open("autoclose", mode='rb') as aut:
         autoclose = pickle.load(aut)
         for chat in autoclose:
-            schedule.every().sunday.at("12:00").do(close_poll, chat).tag(str(chat))
+            schedule.every().sunday.at("9:00").do(close_poll, chat).tag(str(chat))
 if os.path.exists("Cbot_state"):
     with open("Cbot_state", mode='rb') as state:
         pollers = pickle.load(state)
-schedule.every().thursday.at("12:00").do(lambda: bot.send_message(217177334, "Си, а ты не забыла про опрос?"))
+schedule.every().thursday.at("9:00").do(lambda: bot.send_message(217177334, "Си, а ты не забыла про опрос?"))
 
 
 @bot.message_handler(commands=['start'])
