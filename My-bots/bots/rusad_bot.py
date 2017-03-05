@@ -689,7 +689,7 @@ def show_guesses(message):
 
 @rusad.message_handler(commands=['roll'])
 def roll_dice(message):
-    rusad.send_message(message.chat.id, bot_roll_dice(message.text.lower().split(' ')[1:], mood_replies_ru[mdr.mood]), message.chat.id)
+    rusad.send_message(message.chat.id, bot_roll_dice(message.text.lower().split(' ')[1:], mood_replies_ru[mdr.mood], message.chat.id))
 
 @rusad.message_handler(commands=['upd'])
 def update_by_cmnd(message):
