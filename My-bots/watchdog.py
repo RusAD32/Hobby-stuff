@@ -10,7 +10,7 @@ def bot_ls(bot):
     while True:
         compproc = subprocess.run([f"./bots/{bot}"], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
         print(f"A problem occured with {bot[:-3]}. See logs")
-        with open(f"{botх[:-3]}_errlog", mode = 'a') as log:
+        with open(f"{bot[:-3]}_errlog", mode = 'a') as log:
             log.write(compproc.stderr.decode("utf-8"))
         dummy = subprocess.run(["./bots/dummy.py", f"{bot}"])
         time.sleep(10)
