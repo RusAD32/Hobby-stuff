@@ -345,10 +345,12 @@ def bot_roll_dice(arr, replies, chid):
                 nm = nm[0].split('д')
             n = int(nm[0])
             m = int(nm[1])
+            if n < 0: n = 1
+            if m < 0: m = 6
     except:
         pass
     msg = ''
-    for i in range (0, n):
+    for i in range(0, n):
         msg += str(random.randint(1, m)) + ' '
         if len(msg) > 2900:
             rusad.send_message(chid, msg)
