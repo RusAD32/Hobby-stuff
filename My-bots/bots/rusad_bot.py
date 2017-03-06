@@ -492,16 +492,17 @@ def parse_msg(message):
 
 @rusad.message_handler(commands=['quote'])
 def send_quote(message):
-    rusad.send_message(message.chat.id, bot_give_quote(message.chat.id))
+    rusad.send_message(message.chat.id, bot_give_saved(message.chat.id, "./quotes/", get_replies(message)))
 
 @rusad.message_handler(commands=['start'])
 def send_welcome(message):
+    replies = get_replies(message)
     if (message.from_user.username != None and not message.from_user.username.lower() in usrs.keys()):
         f = open("./db", mode='a')
         f.write(message.from_user.username.lower() + " " + str(message.from_user.id) + '\n')
         f.close()
         usrs.update({message.from_user.username.lower():message.from_user.id})
-    rusad.reply_to(message, config.greetings)
+    rusad.reply_to(message, replies.greetings)
 
 @rusad.message_handler(commands=['help'])
 def help(message):
@@ -743,12 +744,14 @@ def answerer(message):
             save()
     if not special_msg and (message.text[0:4].lower() == 'ярик' or message.text[0:5].lower() == 'rusad' or
       message.from_user.id == message.chat.id or message.from_user.id in ideaers.keys()):
-        rusad.send_message(message.chat.id, parse_msg(message))
+        mes = parse_msg(message)
+        if mes:
+            rusad.send_message(message.chat.id, parse_msg(message))
     else:
         pass
 
 if __name__ == '__main__':
-    t = threading.Thread(target = send_alerts)
+    t = threading.Thread(target=send_alerts)
     t.daemon = True
     t.start()
     moods = threading.Thread(target = change_moods, args = (mdr,))
