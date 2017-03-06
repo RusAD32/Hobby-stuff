@@ -727,9 +727,6 @@ def answerer(message):
         usrs.update({message.from_user.username.lower():message.from_user.id})
         with open("rusad_state", mode='wb') as state:
             pickle.dump([games, usrs, wgs, active_wgs, ideaers, animeers], state, protocol = pickle.HIGHEST_PROTOCOL)
-    if message.from_user.id == usrs['catoflight'] and random.randint(1,4800) == 4800:
-        special_msg = True
-        rusad.send_message(message.chat.id, "Сишечка, я тебя больше не люблю") # заказной костыль
     if message.from_user.id in games.keys():
         special_msg = True
         responce = bot_supermind(message, get_replies(message))
