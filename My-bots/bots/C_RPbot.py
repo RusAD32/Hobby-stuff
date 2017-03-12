@@ -82,16 +82,17 @@ def results(chat, is_closing=False):
 
 
 def close_poll(chat):
-    if len(pollers[chat].vars) == 0:
-        pollers.pop(chat)
-        bot.send_message(chat, "Никто не проголосовал, так что я удалил этот опрос")
-        return
-    ans = results(chat, True)
-    if ans:
-        pollers[chat].is_closed = True
-        with open("Cbot_state", mode='wb') as state:
-            pickle.dump(pollers, state, protocol=pickle.HIGHEST_PROTOCOL)
-        bot.send_message(chat, ans, reply_markup=telebot.types.ReplyKeyboardRemove())
+    if chat in pollers.keys() and not pollers[chat].is_closed:
+        if len(pollers[chat].vars) == 0:
+            pollers.pop(chat)
+            bot.send_message(chat, "Никто не проголосовал, так что я удалил этот опрос")
+            return
+        ans = results(chat, True)
+        if ans:
+            pollers[chat].is_closed = True
+            with open("Cbot_state", mode='wb') as state:
+                pickle.dump(pollers, state, protocol=pickle.HIGHEST_PROTOCOL)
+            bot.send_message(chat, ans, reply_markup=telebot.types.ReplyKeyboardRemove())
 
 
 def is_adm(m):
