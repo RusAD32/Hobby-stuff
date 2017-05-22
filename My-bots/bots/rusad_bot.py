@@ -71,6 +71,10 @@ if os.path.exists("./rusad_bot_errlog"):
         errtext = errs.read()
         if errtext.split('\n')[0] == 'disconnected':
             pass
+		elif len(errtext) > 3000:
+            with open("./blame") as f:
+                name = int(f.read().strip())
+            rusad.send_document(name, errs)
         else:
             with open("./blame") as f:
                 name = int(f.read().strip())
