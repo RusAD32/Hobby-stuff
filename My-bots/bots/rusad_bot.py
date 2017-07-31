@@ -497,7 +497,7 @@ def parse_msg(message):
 
 @rusad.message_handler(commands=['quote'])
 def send_quote(message):
-    rusad.send_message(str(message.chat.id), bot_give_saved(message.chat.id, "./quotes/", get_replies(message)))
+    rusad.send_message(message.chat.id, bot_give_saved(str(message.chat.id), "./quotes/", get_replies(message)))
 
 @rusad.message_handler(commands=['start'])
 def send_welcome(message):
