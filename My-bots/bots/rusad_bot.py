@@ -74,8 +74,8 @@ if os.path.exists("./rusad_bot_errlog"):
         elif len(errtext) > 3000:
             with open("./blame") as f:
                 name = int(f.read().strip())
-			with open("./rusad_bot_errlog") as file:
-				rusad.send_document(name, errs)
+            with open("./rusad_bot_errlog") as file:
+                rusad.send_document(name, errs)
         else:
             with open("./blame") as f:
                 name = int(f.read().strip())
