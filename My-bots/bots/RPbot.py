@@ -70,7 +70,10 @@ def reminder(mes):
 
 
 def get_latest_post(group_name):
-    posts = loads(get(f"https://api.vk.com/method/wall.get?domain={group_name}&count=2").content)['response']
+    with open("log", mode='a') as l:
+        posts = loads(get(f"https://api.vk.com/method/wall.get?domain={group_name}&count=2").content)
+        l.write(str(posts) + " " + str(dir(posts)))
+        posts = posts['items']
     return posts[1] if posts[1]['date'] > posts[2]['date'] else posts[2]
 
 

@@ -64,22 +64,22 @@ mood_replies_ru = {"normal":config.replies_ru_norm,
                    "dere":config.replies_ru_dere,
                    "genki":config.replies_ru_genki,
                    "deredere":config.replies_ru_deredere}
-                   
+                  
 
 if os.path.exists("./rusad_bot_errlog"):
     with open("./rusad_bot_errlog") as errs:
         errtext = errs.read()
-        if errtext.split('\n')[0] == 'disconnected':
-            pass
-        elif len(errtext) > 3000:
-            with open("./blame") as f:
-                name = int(f.read().strip())
-            with open("./rusad_bot_errlog") as file:
-                rusad.send_document(name, errs)
-        else:
-            with open("./blame") as f:
-                name = int(f.read().strip())
-            rusad.send_message(name, errtext)
+    if errtext.split('\n')[0] == 'disconnected':
+        pass
+    elif len(errtext) > 3000:
+        with open("./blame") as f:
+            name = int(f.read().strip())
+        with open("./rusad_bot_errlog") as file:
+            rusad.send_document(name, errs)
+    else:
+        with open("./blame") as f:
+            name = int(f.read().strip())
+        rusad.send_message(name, errtext)
     os.remove("./rusad_bot_errlog")
 else:
     rusad.send_message(usrs['polocky'], "Я перезагрузился. Скорее всего, меня обновили")
@@ -163,7 +163,7 @@ def bot_choice(arr, replies):
     return msg
 
 def bot_remind(arr, message, replies):
-    if 1:#try:
+    try:
         msg_to_rem = ''
         i = 0
         for i in range (0, len(arr)):
@@ -200,6 +200,10 @@ def bot_remind(arr, message, replies):
                     break
             i += len(timearr) + 1
             for j in range (0, len(timearr), 2):
+                try:
+                    int(timearr[j])
+                except:
+                    timearr.insert(j, "1")
                 if timearr[j+1][:3] == 'час':
                     time_to_wait += int(timearr[j])*3600
                 elif timearr[j+1][:3] == 'мин':
@@ -227,7 +231,7 @@ def bot_remind(arr, message, replies):
             msg_to_rem += x + ' '
         alerter(usr_to_rem, time_to_wait, msg_to_rem)
         msg = replies.correct_alert
-    else:#except:
+    except:
         msg = replies.wrong_alert
     return msg
 
