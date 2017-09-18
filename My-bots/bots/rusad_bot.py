@@ -752,7 +752,7 @@ def answerer(message):
       message.from_user.id == message.chat.id or message.from_user.id in ideaers.keys()):
         mes = parse_msg(message)
         if mes:
-            rusad.send_message(message.chat.id, parse_msg(message))
+            rusad.send_message(message.chat.id, mes)
     else:
         pass
 
