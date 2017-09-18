@@ -475,7 +475,7 @@ def parse_msg(message):
                 text = quotes.read()
                 if len(text) > 0:
                     msgs = telebot.util.split_string(text, 3000)
-                    for msg in msgs[-1]:
+                    for msg in msgs[:-1]:
                         rusad.send_message(message.chat.id, msg)
                     msg = msgs[-1]
                 else:
