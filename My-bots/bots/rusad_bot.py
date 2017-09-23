@@ -748,6 +748,10 @@ def answerer(message):
         if "Правильно" in responce or "К сожалению" in responce:
             games.pop(message.from_user.id)
             save()
+            
+    if "tadaima" in message.text.lower() and message.from_user.id in animeers:     
+        special_msg = True     
+        rusad.send_message(message.chat.id, "Okaeri!"
     if not special_msg and (message.text[0:4].lower() == 'ярик' or message.text[0:5].lower() == 'rusad' or
       message.from_user.id == message.chat.id or message.from_user.id in ideaers.keys()):
         mes = parse_msg(message)
