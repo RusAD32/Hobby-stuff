@@ -6,6 +6,7 @@ import os, os.path
 import time
 import subprocess
 import shutil
+
 def bot_ls(bot):
     while True:
         compproc = subprocess.run([f"./bots/{bot}"], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
@@ -24,8 +25,23 @@ if __name__ == "__main__":
         t = threading.Thread(target = bot_ls, args = (file,))
         t.daemon = True
         t.start()
+    updater = socket.socket()
+    updater.bind( ("", 11111) )
+    updater.listen(1)
     try:
         while True:
+            conn, addr = updater.accept()
+            data = conn.recv(1024)
+            if data == b"reset":
+                ps = subprocess.run(["ps -ef|grep bot.py"], stdout=subprocess.PIPE).stdout.decode("utf-8")
+                procs = ps.split('\n')
+                pids = []
+                for line in procs:
+                    items = line.split('\t')
+                    if int(items[2]) != 1 and "grep" not in procs:  # I was too lazy to count...
+                        pids.append(items[1])
+                for pid in pids:
+                    os.system(f"kill {pid}")
             time.sleep(10)
     except KeyboardInterrupt:
         exit()
