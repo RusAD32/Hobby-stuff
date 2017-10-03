@@ -37,8 +37,7 @@ if __name__ == "__main__":
                 procs = ps.split('\n')
                 pids = []
                 for line in [x for x in procs if "bot" in x]:
-                    print(line)
-                    items = line.split('\t')
+                    items = [x for x in line.split(' ') if x != ""]
                     if "grep" not in procs:  # I was too lazy to count...
                         pids.append(items[1])
                 for pid in pids:
