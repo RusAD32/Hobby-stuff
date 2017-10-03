@@ -42,6 +42,7 @@ if __name__ == "__main__":
                         pids.append(items[1])
                 for pid in pids:
                     os.system(f"kill {pid}")
+            conn.close()
             time.sleep(10)
     except KeyboardInterrupt:
         exit()
