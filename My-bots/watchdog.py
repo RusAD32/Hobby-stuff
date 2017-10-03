@@ -33,7 +33,7 @@ if __name__ == "__main__":
             conn, addr = updater.accept()
             data = conn.recv(1024)
             if data == b"reset":
-                ps = subprocess.run(["ps -ef|grep bot.py"], stdout=subprocess.PIPE).stdout.decode("utf-8")
+                ps = subprocess.check_output(["ps -ef|grep bot.py"])
                 procs = ps.split('\n')
                 pids = []
                 for line in procs:
