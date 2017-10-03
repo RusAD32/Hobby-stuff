@@ -36,7 +36,7 @@ if __name__ == "__main__":
                 ps = subprocess.check_output(["ps", "-ef"])
                 procs = ps.split(b'\n')
                 pids = []
-                for line in [x for x in procs if "bot" in x]:
+                for line in [x for x in procs if b"bot" in x]:
                     items = line.split(b'\t')
                     if "grep" not in procs:  # I was too lazy to count...
                         pids.append(items[1])
