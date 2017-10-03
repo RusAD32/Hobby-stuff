@@ -38,7 +38,7 @@ if __name__ == "__main__":
                 pids = []
                 for line in [x for x in procs if "bot" in x]:
                     items = line.split('\t')
-                    if int(items[2]) != 1 and "grep" not in procs:  # I was too lazy to count...
+                    if "grep" not in procs:  # I was too lazy to count...
                         pids.append(items[1])
                 for pid in pids:
                     os.system(f"kill {pid}")
