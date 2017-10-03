@@ -33,11 +33,11 @@ if __name__ == "__main__":
             conn, addr = updater.accept()
             data = conn.recv(1024)
             if data == b"reset":
-                ps = subprocess.check_output(["ps", "-ef"])
-                procs = ps.split(b'\n')
+                ps = subprocess.check_output(["ps", "-ef"]).decode("utf-8")
+                procs = ps.split('\n')
                 pids = []
-                for line in [x for x in procs if b"bot" in x]:
-                    items = line.split(b'\t')
+                for line in [x for x in procs if "bot" in x]:
+                    items = line.split('\t')
                     if "grep" not in procs:  # I was too lazy to count...
                         pids.append(items[1])
                 for pid in pids:
