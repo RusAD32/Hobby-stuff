@@ -20,6 +20,7 @@ def bot_ls(bot):
 
 if __name__ == "__main__":
     files = [file for file in os.listdir("./bots") if "bot.py" in file.lower()]
+    files.append("alert_server.py")
     for file in files:
         print(file)
         t = threading.Thread(target = bot_ls, args = (file,))
