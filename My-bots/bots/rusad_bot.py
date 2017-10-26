@@ -69,17 +69,17 @@ mood_replies_ru = {"normal":config.replies_ru_norm,
 if os.path.exists("./rusad_bot_errlog"):
     with open("./rusad_bot_errlog") as errs:
         errtext = errs.read()
-    if errtext.split('\n')[0] == 'disconnected':
-        pass
-    elif len(errtext) > 3000:
-        with open("./blame") as f:
-            name = int(f.read().strip())
-        with open("./rusad_bot_errlog") as file:
-            rusad.send_document(name, errs)
-    else:
-        with open("./blame") as f:
-            name = int(f.read().strip())
-        rusad.send_message(name, errtext)
+        if errtext.split('\n')[0] == 'disconnected':
+            pass
+        elif len(errtext) > 3000:
+            with open("./blame") as f:
+                name = int(f.read().strip())
+            with open("./rusad_bot_errlog") as file:
+                rusad.send_document(name, errs)
+        else:
+            with open("./blame") as f:
+                name = int(f.read().strip())
+            rusad.send_message(name, errtext)
     os.remove("./rusad_bot_errlog")
 else:
     rusad.send_message(usrs['polocky'], "Я перезагрузился. Скорее всего, меня обновили")
@@ -737,17 +737,19 @@ def answerer(message):
         with open("rusad_state", mode='wb') as state:
             pickle.dump([games, usrs, wgs, active_wgs, ideaers, animeers], state, protocol = pickle.HIGHEST_PROTOCOL)
     if message.from_user.id in games.keys():
-        special_msg = True
         responce = bot_supermind(message, get_replies(message))
         if "Правильно" in responce and message.from_user.id == usrs["justbucket"]:
             responce = 'Правильно! Вы подебили!' # заказной костыль
         if responce:
             rusad.reply_to(message, responce)
-        else:
-            special_msg = False
         if "Правильно" in responce or "К сожалению" in responce:
             games.pop(message.from_user.id)
             save()
+        if not responce:
+            return
+    if "tadaima" in message.text.lower() and len(message.text) <= 10 and message.from_user.id in animeers:
+        rusad.send_message(message.chat.id, "Okaeri!")
+        return
     if not special_msg and (message.text[0:4].lower() == 'ярик' or message.text[0:5].lower() == 'rusad' or
       message.from_user.id == message.chat.id or message.from_user.id in ideaers.keys()):
         mes = parse_msg(message)
