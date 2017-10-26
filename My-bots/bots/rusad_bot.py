@@ -69,17 +69,17 @@ mood_replies_ru = {"normal":config.replies_ru_norm,
 if os.path.exists("./rusad_bot_errlog"):
     with open("./rusad_bot_errlog") as errs:
         errtext = errs.read()
-        if errtext.split('\n')[0] == 'disconnected':
-            pass
-        elif len(errtext) > 3000:
-            with open("./blame") as f:
-                name = int(f.read().strip())
-            with open("./rusad_bot_errlog") as file:
-                rusad.send_document(name, errs)
-        else:
-            with open("./blame") as f:
-                name = int(f.read().strip())
-            rusad.send_message(name, errtext)
+    if errtext.split('\n')[0] == 'disconnected':
+        pass
+    elif len(errtext) > 3000:
+        with open("./blame") as f:
+            name = int(f.read().strip())
+        with open("./rusad_bot_errlog") as file:
+            rusad.send_document(name, file)
+    else:
+        with open("./blame") as f:
+            name = int(f.read().strip())
+        rusad.send_message(name, errtext)
     os.remove("./rusad_bot_errlog")
 else:
     rusad.send_message(usrs['polocky'], "Я перезагрузился. Скорее всего, меня обновили")
