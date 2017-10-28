@@ -369,7 +369,7 @@ def bot_roll_dice(arr, replies, chid):
 
 def calculate(string):
     if string.strip() != "":
-        return str(subprocess.check_output(['./bots/calc', f'{string}']))
+        return subprocess.check_output(['./bots/calc', f'{string}']).decode("UTF-8")
     return "Пустое выражение не считается!"
 
 def parse_msg(message):
