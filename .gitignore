@@ -3,5 +3,6 @@
 !/My-bots/.gitignore
 /My-bots/bots/**
 !/My-bots/bots/*.py
+!/My-bots/bots/calc
 /My-bots/ideas/*
 /My-bots/quotes/*
