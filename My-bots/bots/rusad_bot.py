@@ -366,6 +366,11 @@ def bot_roll_dice(arr, replies, chid):
             msg = ""
     return msg
 
+def calculate(string):
+    if string.strip() != "":
+        return os.subprocess.check_output(f'./bots/calc "{string}"')
+    return "Пустое выражение не считается!"
+
 def parse_msg(message):
     replies = get_replies(message)
     arr = message.text.lower().split(' ')
@@ -494,6 +499,9 @@ def parse_msg(message):
             break
         elif "кинь" in arr[i] or "ролл" in arr[i] or "roll" in arr[i]:
             msg = bot_roll_dice(arr[i+1:], replies, message.chat.id)
+            break
+        elif "посчитай" in arr[i] or "calc" in arr[i]:
+            msg = calculate("".join(arr[i+1:]))
             break
         else:
             msg = replies.wrong_command
@@ -727,6 +735,10 @@ def anime_on(message):
         rusad.send_message(message.chat.id, config.anime_off)
     else:
         rusad.send_message(message.chat.id, config.anime_already_off)
+
+@rusad.message_handler(commands=['calc'])
+def roll_dice(message):
+    rusad.send_message(message.chat.id, calculate("".join(message.text.split(" ")[1:])))
 
     
 @rusad.message_handler(content_types=["text"])
