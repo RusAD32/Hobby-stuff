@@ -14,6 +14,7 @@ import os
 import socket
 import schedule
 import pickle
+import subprocess
 
 
 if os.path.exists("rusad_bot_token"):
@@ -368,7 +369,7 @@ def bot_roll_dice(arr, replies, chid):
 
 def calculate(string):
     if string.strip() != "":
-        return os.subprocess.check_output(f'./bots/calc "{string}"')
+        return subprocess.check_output(f'./bots/calc "{string}"')
     return "Пустое выражение не считается!"
 
 def parse_msg(message):
