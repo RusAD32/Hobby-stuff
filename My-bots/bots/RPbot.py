@@ -80,7 +80,7 @@ def get_latest_post(group_name):
     with open("log", mode='a') as l:
         posts = loads(get(f"https://api.vk.com/method/wall.get?access_token={VK_TOKEN}&domain={group_name}&count=2").content)
         l.write(str(posts) + " " + str(dir(posts)))
-    #    posts = posts['items']
+        posts = posts['response']
     return posts[1] if posts[1]['date'] > posts[2]['date'] else posts[2]
 
 
