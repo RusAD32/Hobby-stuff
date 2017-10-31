@@ -164,19 +164,19 @@ def bot_choice(arr, replies):
     return msg
 
 def bot_remind(arr, message, replies):
-    try:
+    if 1:
         msg_to_rem = ''
         i = 0
-        for i in range (0, len(arr)):
+        for i in range(len(arr)):
             if arr[i][0] == "@":
                 name = arr[i][1:].lower()
-                if arr[i+1] == 'в' and arr [i+2] == 'чат':
+                if arr[i+1] == 'в' and arr[i+2] == 'чат':
                     usr_to_rem = message.chat.id
-                    msg_to_rem = '@' + name + ' '
+                    msg_to_rem += '@' + name + ' '
                     i += 2
                     break
                 elif name in usrs.keys():
-                    msg_to_rem = 'От @' + message.from_user.username + ': '
+                    msg_to_rem += 'От @' + message.from_user.username + ': '
                     usr_to_rem = usrs[name]
                     break
                 else:
@@ -200,7 +200,7 @@ def bot_remind(arr, message, replies):
                 else:
                     break
             i += len(timearr) + 1
-            for j in range (0, len(timearr), 2):
+            for j in range(0, len(timearr), 2):
                 try:
                     int(timearr[j])
                 except:
@@ -232,7 +232,7 @@ def bot_remind(arr, message, replies):
             msg_to_rem += x + ' '
         alerter(usr_to_rem, time_to_wait, msg_to_rem)
         msg = replies.correct_alert
-    except:
+    else:
         msg = replies.wrong_alert
     return msg
 
@@ -416,6 +416,9 @@ def parse_msg(message):
                     dest = wgs[arr[i+3]].name
                 elif message.from_user.id in active_wgs.keys():
                     dest = active_wgs[message.from_user.id].name
+                else:
+                    msg = "Неправильная группа"
+                    break
             else:
                 dest = str(message.from_user.id)
             ideaers[message.from_user.id] = dest
