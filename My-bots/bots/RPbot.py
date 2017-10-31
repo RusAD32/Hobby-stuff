@@ -30,6 +30,13 @@ else:
     print("Token not found! (Dayana)")
     while True:
         time.sleep(100)
+if os.path.exists("RPbot_VK_token"):
+    with open("RPbot_VK_token") as token:
+        VK_TOKEN = token.read().strip()
+else:
+    print("VKToken not found! (Dayana)")
+    while True:
+        time.sleep(100)
 bot = telebot.TeleBot(TOKEN)
 greets = ("Здравствуй путник, добро пожаловать к костру!",
           "Добрый день. Общаясь со мной, помните - Искусственный интеллект не имеет шансов в столкновении с естественной глупостью.",
@@ -71,7 +78,7 @@ def reminder(mes):
 
 def get_latest_post(group_name):
     with open("log", mode='a') as l:
-        posts = loads(get(f"https://api.vk.com/method/wall.get?domain={group_name}&count=2").content)
+        posts = loads(get(f"https://api.vk.com/method/wall.get?domain={group_name}&count=2&access_token={VK_TOKEN}").content)
         l.write(str(posts) + " " + str(dir(posts)))
         posts = posts['items']
     return posts[1] if posts[1]['date'] > posts[2]['date'] else posts[2]
@@ -87,7 +94,7 @@ def vk_notifier():
             return
         for group in chats_to_notify[chat_id]:
             try:
-                gr = loads(get(f"https://api.vk.com/method/groups.getById?group_id=polocky1").content)['response'][0]
+                gr = loads(get(f"https://api.vk.com/method/groups.getById?group_id={group}&access_token={VK_TOKEN}").content)['response'][0]
                 if gr['is_closed'] or 'deactivated' in gr.keys():
 #                    chats_to_notify[chat_id].remove(group)
                     continue
@@ -417,11 +424,13 @@ def bot_cmnd(m):
                      "/dice_d100 -- кинуть стогранник\n/help -- вывести текущее сообщение\n\n" +
                      "Правила: https://vk.com/topic-138618758_35190639")
 
-t = threading.Thread(target=scheduler)
-t.daemon = True
-t.start()
 
-while True:
-    bot.polling(none_stop=True)
+if __name__ == "__main__":
+    t = threading.Thread(target=scheduler)
+    t.daemon = True
+    t.start()
+
+    while True:
+        bot.polling(none_stop=True)
 
 
