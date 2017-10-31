@@ -164,7 +164,7 @@ def bot_choice(arr, replies):
     return msg
 
 def bot_remind(arr, message, replies):
-    if 1:
+    try:
         msg_to_rem = ''
         i = 0
         for i in range(len(arr)):
@@ -232,7 +232,7 @@ def bot_remind(arr, message, replies):
             msg_to_rem += x + ' '
         alerter(usr_to_rem, time_to_wait, msg_to_rem)
         msg = replies.correct_alert
-    else:
+    except:
         msg = replies.wrong_alert
     return msg
 
