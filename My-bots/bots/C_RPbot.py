@@ -22,13 +22,13 @@ autoclose = []
 
 
 class Poller:
-    vars = dict()
+    vars = {}
     host = 0
     chat = 0
     question = ""
     is_ready = False
     is_closed = False
-    voted = dict()
+    voted = {}
 
     def __init__(self, host_id, chat_id):
         self.vars = {}
