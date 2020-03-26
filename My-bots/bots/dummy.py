@@ -2,9 +2,6 @@
 
 import telebot
 import config
-from requests import exceptions
-from time import sleep
-from os import remove
 from sys import argv
 
 with open(argv[1][:-3] + "_token") as token:

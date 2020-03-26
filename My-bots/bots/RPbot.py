@@ -6,7 +6,7 @@ import threading
 import random
 import schedule  # Should be installed via pip
 import os
-from requests import get, exceptions
+from requests import get
 from json import loads
 import pickle
 
