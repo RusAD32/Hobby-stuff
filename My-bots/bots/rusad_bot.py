@@ -12,7 +12,6 @@ import sys
 import requests
 import os
 import socket
-import schedule
 import pickle
 import subprocess
 

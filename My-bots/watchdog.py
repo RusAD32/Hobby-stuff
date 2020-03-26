@@ -5,7 +5,6 @@ import threading
 import os, os.path
 import time
 import subprocess
-import shutil
 
 def bot_ls(bot):
     while True:
