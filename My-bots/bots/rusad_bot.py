@@ -112,7 +112,7 @@ def send_alerts():
     server.bind("./sender")
     server.listen(3)
     while True:
-        conn, addr = server.accept()
+        conn, _ = server.accept()
         data = reminder()
         data.ParseFromString(conn.recv(8192))
         rusad.send_message(data.uid, data.mes)
@@ -360,7 +360,7 @@ def bot_roll_dice(arr, replies, chid):
     except:
         pass
     msg = ''
-    for i in range(0, n):
+    for _ in range(0, n):
         msg += str(random.randint(1, m)) + ' '
         if len(msg) > 2900:
             rusad.send_message(chid, msg)
