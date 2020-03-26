@@ -340,7 +340,7 @@ def bot_supermind(message, replies):
     save()
     return msg
 
-def bot_roll_dice(arr, replies, chid):
+def bot_roll_dice(arr, _replies, chid):
     n, m = 1, 6
     try:
         if arr[0].isdigit():
